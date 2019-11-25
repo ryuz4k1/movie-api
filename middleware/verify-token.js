@@ -1,0 +1,28 @@
+const jwt = require('jsonwebtoken');
+
+module.exports = (req, res, next) => {
+    //Token 3 yol ile gelebilir. Header, body ve query ile.
+    const token = req.headers['x-access-token'] || req.body.token || req.query.token
+    
+    if(token){
+		jwt.verify(token, req.app.get('apiKey'), (err, decoded) => {
+			if (err){
+				res.json({
+					status: false,
+					message: 'Failed to authenticate token.'
+				})
+			}else{
+				req.decode = decoded;
+				next(); //her şey yolunda, herhangi bi routea gidebilirsin
+			}
+		});
+	}else{
+		res.json({
+			status: false,
+			message: 'No token provided.'
+		})
+	}
+
+
+
+};

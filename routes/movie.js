@@ -4,14 +4,27 @@ const Movie = require('../models/movie-model');
 
 
 /* GET users listing. */
-router.get('/', (req, res, next) => {
 
-  const movies = Movie.find({});
-  movies.then((data) => {
-    res.send(data);
-  }).catch((err) => {
-    res.send(err);
-  });
+router.get('/', (req, res) => {
+	const promise = Movie.aggregate([
+		{
+			$lookup: {
+				from: 'directors',  //director collectionı ile aggregate
+				localField: 'directorId', //movie directorId ile
+				foreignField: '_id', //director collectionundaki id eşleşsin
+				as: 'director'
+			}
+		},
+		{
+			$unwind: '$director'
+		}
+	]);
+
+	promise.then((data) => {
+		res.json(data);
+	}).catch((err) => {
+		res.json(err);
+	})
 });
 
 router.get('/top10', (req, res, next) => {
