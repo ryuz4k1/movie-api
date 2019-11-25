@@ -115,4 +115,34 @@ router.get('/:directorId', (req, res) => {
 });
 
 
+router.put('/:directorId', (req, res, next) => {
+    const director = Director.findByIdAndUpdate(
+      req.params.directorId, 
+      req.body,
+      {
+        new: true //Güncellenmiş datayı döndürmek istiyorsak bunu kullanıyoruz.
+      }
+      );
+  
+      director.then((data) => {  
+      res.send(data);
+    }).catch((err) => {
+      res.send(err);
+    });
+  
+  });
+
+
+
+  router.delete('/:directorId', (req, res, next) => {
+    const director = Director.findByIdAndDelete(req.params.directorId);
+  
+    director.then((data) => {  
+      res.send(data);
+    }).catch((err) => {
+      res.send(err);
+    });
+  
+  });
+
 module.exports = router;
