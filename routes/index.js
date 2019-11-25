@@ -3,8 +3,13 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-
 const User = require('../models/user-model');
+
+
+/* GET home page. */
+router.get('/', (req, res, next) => {
+  res.render('index', { title: 'Express' });
+});
 
 /* GET home page. */
 router.get('/register', (req, res, next) => {
