@@ -1,10 +1,10 @@
 const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
-    //Token 3 yol ile gelebilir. Header, body ve query ile.
-    const token = req.headers['x-access-token'] || req.body.token || req.query.token
-    
-    if(token){
+	//Token 3 yol ile gelebilir. Header, body ve query ile.
+	const token = req.headers['x-access-token'] || req.body.token || req.query.token
+
+	if(token){
 		jwt.verify(token, req.app.get('apiKey'), (err, decoded) => {
 			if (err){
 				res.json({
@@ -22,7 +22,4 @@ module.exports = (req, res, next) => {
 			message: 'No token provided.'
 		})
 	}
-
-
-
 };

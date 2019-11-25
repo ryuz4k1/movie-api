@@ -27,49 +27,47 @@ router.get('/register', (req, res, next) => {
       res.send(err)
     });
   });
+});
 
+router.post('/authenticate', (req, res) => {
+  const { username, password } = req.body;
 
-  router.post('/authenticate', (req, res) => {
-    const { username, password } = req.body;
-  
-    User.findOne({
-      username: username
-    }, (err, user) => {
-      if (err)
-        throw err;
-  
-      if(!user){
-        res.json({
-          status: false,
-          message: 'Authentication failed, user not found.'
-        });
-      }else{
-        //ilk parametre, servisten gelen, ikincisi dbdeki password karşılaştırma
-        bcrypt.compare(password, user.password).then((result) => { 
-          if (!result) {
-            res.json({
-              status: false,
-              message: 'Wrong password'
-            });
-          }else{
-            const payload = {
-              username
-            };
-            //Token üretiyoruz, ilk parametre payload kısmı, ikincisi ise secret key
-            //3. parametre ise belli bir zaman verebiliyoruz, 720dakika yani 12 saat sürecek bir tokenin süresi sonrasında destroy
-            const token = jwt.sign(payload, req.app.get('apiKey'), {expiresIn: 720}); 
-            res.json({
-              status: true,
-              token
-            });
+  User.findOne({
+    username: username
+  }, (err, user) => {
+    if (err)
+      throw err;
+
+    if(!user){
+      res.json({
+        status: false,
+        message: 'Authentication failed, user not found.'
+      });
+    }else{
+      //ilk parametre, servisten gelen, ikincisi dbdeki password karşılaştırma
+      bcrypt.compare(password, user.password).then((result) => {
+        if (!result){
+          res.json({
+            status: false,
+            message: 'Authentication failed, wrong password.'
+          });
+        }else{
+          const payload = {
+            username
           };
-        });
-      };
-    });
-  
+          //Token üretiyoruz, ilk parametre payload kısmı, ikincisi ise secret key
+          //3. parametre ise belli bir zaman verebiliyoruz, 720dakika yani 12 saat sürecek bir tokenin süresi sonrasında destroy
+          const token = jwt.sign(payload, req.app.get('apiKey'), {
+            expiresIn: 720 // 12 saat
+          });
+          res.json({
+            status: true,
+            token
+          });
+        };
+      });
+    };
   });
-  
-
 });
 
 module.exports = router;

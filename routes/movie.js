@@ -87,19 +87,17 @@ router.post('/', (req, res, next) => {
 });
 
 
-router.delete('/:movieId', (req, res, next) => {
-  const movie = Movie.findOneAndDelete(req.params.movieId);
+router.delete('/:movie_id', (req, res, next) => {
+	const promise = Movie.findByIdAndRemove(req.params.movie_id);
 
-  if (!movie) {
-    next({message: 'There no such a film'});
-  }
+	promise.then((movie) => {
+		if (!movie)
+			next({ message: 'The movie was not found.', code: 99 });
 
-  movie.then((data) => {  
-    res.send(data);
-  }).catch((err) => {
-    res.send(err);
-  });
-
+		res.json({ status: 1 });
+	}).catch((err) => {
+		res.json(err);
+	});
 });
 
 
