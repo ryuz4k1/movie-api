@@ -1,3 +1,4 @@
+[![Build status](https://api.travis-ci.org/ryuz4k1/movie-api.svg)](https://travis-ci.org/ryuz4k1/movie-api)
 # MOVIE API
 
 # Movies
