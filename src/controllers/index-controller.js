@@ -11,109 +11,82 @@ class IndexController {
         this.routes();
     }
 
-    async edit(req, res) {
+    async index(req, res) {
         try {
-            
+            return res.render('index', { title: 'Express'});
         } 
         catch (error) {
-           
-
+           console.log(error);
         }
     }
 
-    async update(req, res) {
+    async register(req, res) {
         try {
-            
-        } 
+          req.body.password = await bcrypt.hash(req.body.password, 10);
+
+          const user = await User.create({
+            username: req.body.username,
+            password: req.body.password
+          });
+          return res.send(user);
+        }
         catch (error) {
-            
+            console.log(error);
         }
     }
 
-    async create(req, res) {
-        try {
-			const director = await Director.create(req.body);
+    async authenticate(req, res) {
+      try {
+        const { username, password } = req.body;
+        const user = await User.findOne({
+          username: username
+        }, (err, user) => {
+          if (err)
+            throw err;
 
-			return res.send(director);
-        } 
-        catch (error) {
-			console.log(error);
-		}
+          if(!user){
+            res.json({
+              status: false,
+              message: 'Authentication failed, user not found.'
+            });
+          }else{
+            //ilk parametre, servisten gelen, ikincisi dbdeki password karşılaştırma
+            bcrypt.compare(password, user.password).then((result) => {
+              if (!result){
+                res.json({
+                  status: false,
+                  message: 'Authentication failed, wrong password.'
+                });
+              }else{
+                const payload = {
+                  username
+                };
+                //Token üretiyoruz, ilk parametre payload kısmı, ikincisi ise secret key
+                //3. parametre ise belli bir zaman verebiliyoruz, 720dakika yani 12 saat sürecek bir tokenin süresi sonrasında destroy
+                const token = jwt.sign(payload, req.app.get('apiKey'), {
+                  expiresIn: 720 // 12 saat
+                });
+                res.json({
+                  status: true,
+                  token
+                });
+              };
+            });
+          };
+        });
+        return res.send(user);
+      } 
+      catch (error) {
+        console.log(error);
+      }
     }
 
 	routes() {
-        this.router.get("/edit/:movieId", this.edit.bind(this));
-
-        this.router.post("/add", this.create.bind(this));
-        this.router.post("/edit", this.update.bind(this));
+        this.router.get("/", this.index.bind(this));
+        this.router.post("/register", this.register.bind(this));
+        this.router.post("/authenticate", this.authenticate.bind(this));
     }
 }
 
 
 module.exports = IndexController;
-
-
-/*
-router.get('/', (req, res, next) => {
-  res.render('index', { title: 'Express' });
-});
-
-router.get('/register', (req, res, next) => {
-  const { username, password } = req.body;
-
-  bcrypt.hash(password, 10).then((hash) =>  {
-    const user = new User({
-      username,
-      password: hash
-    });
-  
-    user.save().then((data) => {
-      res.send(data)
-    }).catch((err) => {
-      res.send(err)
-    });
-  });
-});
-
-router.post('/authenticate', (req, res) => {
-  const { username, password } = req.body;
-
-  User.findOne({
-    username: username
-  }, (err, user) => {
-    if (err)
-      throw err;
-
-    if(!user){
-      res.json({
-        status: false,
-        message: 'Authentication failed, user not found.'
-      });
-    }else{
-      //ilk parametre, servisten gelen, ikincisi dbdeki password karşılaştırma
-      bcrypt.compare(password, user.password).then((result) => {
-        if (!result){
-          res.json({
-            status: false,
-            message: 'Authentication failed, wrong password.'
-          });
-        }else{
-          const payload = {
-            username
-          };
-          //Token üretiyoruz, ilk parametre payload kısmı, ikincisi ise secret key
-          //3. parametre ise belli bir zaman verebiliyoruz, 720dakika yani 12 saat sürecek bir tokenin süresi sonrasında destroy
-          const token = jwt.sign(payload, req.app.get('apiKey'), {
-            expiresIn: 720 // 12 saat
-          });
-          res.json({
-            status: true,
-            token
-          });
-        };
-      });
-    };
-  });
-});
-*/
-

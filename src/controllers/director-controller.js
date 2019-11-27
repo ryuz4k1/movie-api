@@ -9,24 +9,118 @@ class DirectorController {
 	constructor(router) {
         this.router = router;
         this.routes();
-    }
+	}
+	
+	async getAll(req, res) {
+		try {
+			const diretors = await Director.aggregate([
+				{
+					$lookup: {
+						from: 'movies', //join edilecek collection adı
+						localField: '_id', //director collectioundaki eşleşecek field
+						foreignField: 'directorId', //movies collectionındaki eşleşecek field
+						as: 'movies' //dönen datanın atanacağı ad
+					}
+				},
+				{
+					$unwind: {
+						path: '$movies',
+						preserveNullAndEmptyArrays: true //filmi olmayan yönetmenlerin listelemek için
+					}
+				},
+				{
+					$group: { //yukarıdaki directorun filmleri ile groupluyoruz, kümeliyoruz
+						_id: {
+							_id: '$_id',
+							name: '$name',
+							surname: '$surname',
+							bio: '$bio'
+						},
+						movies: {
+							$push: '$movies'
+						}
+					}
+				},
+				{
+					$project: {
+						_id: '$_id._id',
+						name: '$_id.name',
+						surname: '$_id.surname',
+						movies: '$movies'
+					}
+				}
+			]);	
+			return res.send(diretors);
+		} 
+		catch (error) {
+			console.log();
+		}
+	}
 
-    async edit(req, res) {
+    async getById(req, res) {
         try {
-            
+            const director = await Director.aggregate([
+				{
+					$match: {
+						'_id': mongoose.Types.ObjectId(req.params.directorId)
+					}
+				},
+				{
+					$lookup: {
+						from: 'movies', //join edilecek collection adı
+						localField: '_id', //director collectioundaki eşleşecek field
+						foreignField: 'directorId', //movies collectionındaki eşleşecek field
+						as: 'movies' //dönen datanın atanacağı ad
+					}
+				},
+				{
+					$unwind: {
+						path: '$movies',
+						preserveNullAndEmptyArrays: true //filmi olmayan yönetmenlerin listelemek için
+					}
+				},
+				{
+					$group: { //yukarıdaki directorun filmleri ile groupluyoruz, kümeliyoruz
+						_id: {
+							_id: '$_id',
+							name: '$name',
+							surname: '$surname',
+							bio: '$bio'
+						},
+						movies: {
+							$push: '$movies'
+						}
+					}
+				},
+				{
+					$project: {
+						_id: '$_id._id',
+						name: '$_id.name',
+						surname: '$_id.surname',
+						movies: '$movies'
+					}
+				}
+			]);
+			return res.send(director);
         } 
         catch (error) {
-           
-
+           console.log(error);
         }
     }
 
     async update(req, res) {
         try {
-            
+			const director = await Director.findByIdAndUpdate(
+				req.params.directorId, 
+				req.body,
+				{
+					new: true //Güncellenmiş datayı döndürmek istiyorsak bunu kullanıyoruz.
+				}
+				);
+			return res.send(director);
         } 
         catch (error) {
-            
+            console.log(error);
         }
     }
 
@@ -53,140 +147,13 @@ class DirectorController {
 	}
 
 	routes() {
-		this.router.get("/edit/:directorId", this.edit.bind(this));
+		this.router.get("/", this.getAll.bind(this));
+		this.router.get("/:directorId", this.getById.bind(this));
 		this.router.delete("/delete/:directorId", this.delete.bind(this));
 
         this.router.post("/add", this.create.bind(this));
-		this.router.post("/edit", this.update.bind(this));
-	
-    }
-
-
+		this.router.put("/edit/:directorId", this.update.bind(this));
+    };
 }
-
-
-/*
-
-
-router.get('/', (req, res) => {
-	const promise = Director.aggregate([
-		{
-			$lookup: {
-				from: 'movies', //join edilecek collection adı
-				localField: '_id', //director collectioundaki eşleşecek field
-				foreignField: 'directorId', //movies collectionındaki eşleşecek field
-				as: 'movies' //dönen datanın atanacağı ad
-			}
-		},
-		{
-			$unwind: {
-				path: '$movies',
-				preserveNullAndEmptyArrays: true //filmi olmayan yönetmenlerin listelemek için
-			}
-		},
-		{
-			$group: { //yukarıdaki directorun filmleri ile groupluyoruz, kümeliyoruz
-				_id: {
-					_id: '$_id',
-					name: '$name',
-					surname: '$surname',
-					bio: '$bio'
-				},
-				movies: {
-					$push: '$movies'
-				}
-			}
-		},
-		{
-			$project: {
-				_id: '$_id._id',
-				name: '$_id.name',
-				surname: '$_id.surname',
-				movies: '$movies'
-			}
-		}
-	]);
-
-	promise.then((data) => {
-		res.json(data);
-	}).catch((err) => {
-		res.json(err);
-	});
-});
-
-
-router.get('/:directorId', (req, res) => {
-	const promise = Director.aggregate([
-        {
-            $match: {
-                '_id': mongoose.Types.ObjectId(req.params.directorId)
-            }
-        },
-		{
-			$lookup: {
-				from: 'movies', //join edilecek collection adı
-				localField: '_id', //director collectioundaki eşleşecek field
-				foreignField: 'directorId', //movies collectionındaki eşleşecek field
-				as: 'movies' //dönen datanın atanacağı ad
-			}
-		},
-		{
-			$unwind: {
-				path: '$movies',
-				preserveNullAndEmptyArrays: true //filmi olmayan yönetmenlerin listelemek için
-			}
-		},
-		{
-			$group: { //yukarıdaki directorun filmleri ile groupluyoruz, kümeliyoruz
-				_id: {
-					_id: '$_id',
-					name: '$name',
-					surname: '$surname',
-					bio: '$bio'
-				},
-				movies: {
-					$push: '$movies'
-				}
-			}
-		},
-		{
-			$project: {
-				_id: '$_id._id',
-				name: '$_id.name',
-				surname: '$_id.surname',
-				movies: '$movies'
-			}
-		}
-	]);
-
-	promise.then((data) => {
-		res.json(data);
-	}).catch((err) => {
-		res.json(err);
-	});
-});
-
-
-router.put('/:directorId', (req, res, next) => {
-    const director = Director.findByIdAndUpdate(
-      req.params.directorId, 
-      req.body,
-      {
-        new: true //Güncellenmiş datayı döndürmek istiyorsak bunu kullanıyoruz.
-      }
-      );
-  
-      director.then((data) => {  
-      res.send(data);
-    }).catch((err) => {
-      res.send(err);
-    });
-  
-  });
-
-
-
-  
-  */
 
 module.exports = DirectorController;

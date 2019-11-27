@@ -1,6 +1,6 @@
 {
     "app": {
-        "port": 3003
+        "port": 3000
     },
     "mongoDB": {
         "endPoint": "mongodb://ryuz4k1:element17@ds059957.mlab.com:59957/movie-api-core"
