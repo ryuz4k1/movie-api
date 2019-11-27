@@ -7,7 +7,7 @@ class MovieController {
         this.routes();
     }
 
-    async getAll(req, res){
+    async getAll(req, res, next){
       try {
         const movies = await Movie.aggregate([
           {
@@ -22,7 +22,8 @@ class MovieController {
             $unwind: '$director'
           }
         ]);
-        return res.send(movies);
+        res.send(movies);
+        return next();
       } 
       catch (error) {
         console.log(error);
@@ -51,17 +52,18 @@ class MovieController {
 
     async update(req, res) {
       try {
-        const movie = await Movie.findOneAndUpdate(
+        const movie = await Movie.findByIdAndUpdate(
           req.params.movieId, 
           req.body,
           {
+            useFindAndModify:  false,
             new: true //Güncellenmiş datayı döndürmek istiyorsak bunu kullanıyoruz.
           }
           );
         return res.send(movie);
       } 
       catch (error) {
-        
+        console.log(error);
       }
     }
 

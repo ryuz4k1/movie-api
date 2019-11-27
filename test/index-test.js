@@ -2,19 +2,18 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const should = chai.should();
 
-const server = require('../app');
+const App = require("../src/app");
+
+const app = new App().getApp();
 
 chai.use(chaiHttp);
 
 
 describe('Node Server', () => {
     it('(GET / index page)', (done) =>{
-        chai.request(server).get('/').end((err, res) => {
+        chai.request(app).get('/').end((err, res) => {
             res.should.have.status(200);
             done();
         });
     });
 });
-
-
-

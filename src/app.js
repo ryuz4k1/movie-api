@@ -54,7 +54,7 @@ class App {
   controllers(){
     this.app.use("/public", express.static("public"));
       
-    this.app.use('/api', verifyToken); //api ulaşmak için ilk başta verifyToken middlewaredan geçecek
+    //this.app.use('/api', verifyToken); //api ulaşmak için ilk başta verifyToken middlewaredan geçecek
     
     // ... Index Controller
     let router = express.Router();
@@ -75,9 +75,7 @@ class App {
   getApp() {
     return this.app;
   }
+
 }
-
-
-
 
 module.exports = App;

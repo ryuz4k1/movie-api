@@ -35,10 +35,10 @@ class IndexController {
         }
     }
 
-    async authenticate(req, res) {
+    async authenticate(req, res, next) {
       try {
         const { username, password } = req.body;
-        const user = await User.findOne({
+        await User.findOne({
           username: username
         }, (err, user) => {
           if (err)
@@ -74,7 +74,6 @@ class IndexController {
             });
           };
         });
-        return res.send(user);
       } 
       catch (error) {
         console.log(error);
