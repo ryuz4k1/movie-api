@@ -1,17 +1,63 @@
-const express = require('express');
-const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/user-model');
 
 
-/* GET home page. */
+class IndexController {
+
+	constructor(router) {
+        this.router = router;
+        this.routes();
+    }
+
+    async edit(req, res) {
+        try {
+            
+        } 
+        catch (error) {
+           
+
+        }
+    }
+
+    async update(req, res) {
+        try {
+            
+        } 
+        catch (error) {
+            
+        }
+    }
+
+    async create(req, res) {
+        try {
+			const director = await Director.create(req.body);
+
+			return res.send(director);
+        } 
+        catch (error) {
+			console.log(error);
+		}
+    }
+
+	routes() {
+        this.router.get("/edit/:movieId", this.edit.bind(this));
+
+        this.router.post("/add", this.create.bind(this));
+        this.router.post("/edit", this.update.bind(this));
+    }
+}
+
+
+module.exports = IndexController;
+
+
+/*
 router.get('/', (req, res, next) => {
   res.render('index', { title: 'Express' });
 });
 
-/* GET home page. */
 router.get('/register', (req, res, next) => {
   const { username, password } = req.body;
 
@@ -69,5 +115,5 @@ router.post('/authenticate', (req, res) => {
     };
   });
 });
+*/
 
-module.exports = router;

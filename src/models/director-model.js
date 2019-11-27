@@ -1,7 +1,6 @@
-const mongoose = require('mongoose');
-const Schema  = mongoose.Schema;
+const mongoose 	 = require("mongoose");
 
-const DirectorSchema = new Schema({
+const DirectorSchema = mongoose.Schema({
 	name: {
 		type: String,
 		maxlength: 60,
@@ -15,7 +14,7 @@ const DirectorSchema = new Schema({
 	bio: {
 		type: String,
 		maxlenght: 1000,
-		minlength: 60
+		minlength: 2
 	},
 	createOn: {
 		type: Date,

@@ -1,8 +1,7 @@
-const mongoose = require('mongoose');
-const Schema  = mongoose.Schema;
+const mongoose 	 = require("mongoose");
 
-const MovieSchema = new Schema({
-    directorId: Schema.Types.ObjectId,
+const MovieSchema = mongoose.Schema({
+    directorId: mongoose.Schema.Types.ObjectId,
     title: {
 			type: String,
 			required:  [true, '`{PATH}` alanı zorunludur.'],

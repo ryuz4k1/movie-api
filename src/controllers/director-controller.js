@@ -1,19 +1,71 @@
-const express = require('express');
-const router = express.Router();
-const Movie = require('../models/movie-model');
 const mongoose = require('mongoose');
 
 // Models
 const Director = require('../models/director-model');
 
-router.post('/', (req, res, next) => {
-  const director = new Director(req.body);
-  director.save().then((data) => {
-  	res.json(data);
-	}).catch((err) => {
-  	res.json(err);
-	})
-});
+
+class DirectorController {
+
+	constructor(router) {
+        this.router = router;
+        this.routes();
+    }
+
+    async edit(req, res) {
+        try {
+            
+        } 
+        catch (error) {
+           
+
+        }
+    }
+
+    async update(req, res) {
+        try {
+            
+        } 
+        catch (error) {
+            
+        }
+    }
+
+    async create(req, res) {
+        try {
+			const director = await Director.create(req.body);
+
+			return res.send(director);
+        } 
+        catch (error) {
+			console.log(error);
+		}
+	}
+	
+	async delete(req, res) {
+		try {
+			const director = await Director.findByIdAndDelete(req.params.directorId);
+
+			return res.send(director);
+		} 
+		catch (error) {
+			console.log(error);
+		}
+	}
+
+	routes() {
+		this.router.get("/edit/:directorId", this.edit.bind(this));
+		this.router.delete("/delete/:directorId", this.delete.bind(this));
+
+        this.router.post("/add", this.create.bind(this));
+		this.router.post("/edit", this.update.bind(this));
+	
+    }
+
+
+}
+
+
+/*
 
 
 router.get('/', (req, res) => {
@@ -134,15 +186,7 @@ router.put('/:directorId', (req, res, next) => {
 
 
 
-  router.delete('/:directorId', (req, res, next) => {
-    const director = Director.findByIdAndDelete(req.params.directorId);
   
-    director.then((data) => {  
-      res.send(data);
-    }).catch((err) => {
-      res.send(err);
-    });
-  
-  });
+  */
 
-module.exports = router;
+module.exports = DirectorController;
