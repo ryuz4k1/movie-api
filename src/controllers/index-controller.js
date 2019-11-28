@@ -11,9 +11,10 @@ class IndexController {
         this.routes();
     }
 
-    async index(req, res) {
+    async index(req, res, next) {
         try {
-            return res.render('index', { title: 'Express'});
+            return res.render("./index.jade", { title: 'Express'});
+            next();
         } 
         catch (error) {
            console.log(error);
