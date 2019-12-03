@@ -36,7 +36,7 @@ class App {
     this.Connection;
 
     // ... Set app port
-    this.app.set("PORT", config.app.port);
+    //this.app.set("PORT", config.app.port);
     
     // ... Body parser
     this.app.use(bodyParser.urlencoded({ extended: true }));
