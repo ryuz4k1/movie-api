@@ -1,6 +1,8 @@
-const Movie   = require('../models/movie-model');
 const Utils   = require('../helpers/utils');
 const Types   = require('../helpers/types');
+
+// ... Movie Model
+const Movie   = require('../models/movie-model');
 
 class MovieController {
 
@@ -9,68 +11,72 @@ class MovieController {
         this.routes();
 
         this.utils = new Utils();
-    }
+  }
 
-    // ... Get all movies in db
-    async getAll(req, res, next){
-      try {
-        const movies = await Movie.aggregate([
-          {
-            $lookup: {
-              from: 'directors',  //Aggregate with director collection
-              localField: 'directorId', //Connect movie.directorId
-              foreignField: '_id', //With director._id
-              as: 'director'
-            }
-          },
-          {
-            $unwind: '$director'
+  // ... Get all movies in db
+  async getAll(req, res, next){
+    try {
+      const movies = await Movie.aggregate([
+        {
+          $lookup: {
+            from: 'directors',  //Aggregate with director collection
+            localField: 'directorId', //Connect movie.directorId
+            foreignField: '_id', //With director._id
+            as: 'director'
           }
-        ]);
-        return res.send(this.utils.setResult(Types.Status.SUCCESS, 'success', movies));
-      } 
-      catch (error) {
-        return res.send(this.utils.setResult(Types.Status.SUCCESS, error.messages, null));
-      }
-    };
-
-    async getTop10(req, res) {
-      try {
-        const movies = await Movie.find({}).limit(10).sort({ imdbScore: 1});
-        return res.send(this.utils.setResult(Types.Status.SUCCESS, 'success', movies));
-      } 
-      catch (error) {
-        return res.send(this.utils.setResult(Types.Status.SUCCESS, error.messages, null));
-      }
+        },
+        {
+          $unwind: '$director'
+        }
+      ]);
+      return res.send(this.utils.setResult(Types.Status.SUCCESS, 'success', movies));
+    } 
+    catch (error) {
+      return res.send(this.utils.setResult(Types.Status.SUCCESS, error.messages, null));
     }
+  };
 
-    async getById(req, res){
-      try {
-        const movie = await Movie.findById(req.params.movieId);
-        return res.send(this.utils.setResult(Types.Status.SUCCESS, 'success', movie));
-      } 
-      catch (error) {
-        return res.send(this.utils.setResult(Types.Status.SUCCESS, error.messages, null));
-      }
-    };
-
-    async update(req, res) {
-      try {
-        const movie = await Movie.findByIdAndUpdate(
-          req.params.movieId, 
-          req.body,
-          {
-            useFindAndModify:  false,
-            new: true //Güncellenmiş datayı döndürmek istiyorsak bunu kullanıyoruz.
-          }
-          );
-        return res.send(this.utils.setResult(Types.Status.SUCCESS, 'success', movie));
-      } 
-      catch (error) {
-        return res.send(this.utils.setResult(Types.Status.SUCCESS, error.messages, null));
-      }
+  // ... Get top 10 movies in db
+  async getTop10(req, res) {
+    try {
+      const movies = await Movie.find({}).limit(10).sort({ imdbScore: 1});
+      return res.send(this.utils.setResult(Types.Status.SUCCESS, 'success', movies));
+    } 
+    catch (error) {
+      return res.send(this.utils.setResult(Types.Status.SUCCESS, error.messages, null));
     }
+  }
 
+  // ... Get movie detail by movieId
+  async getById(req, res){
+    try {
+      const movie = await Movie.findById(req.params.movieId);
+      return res.send(this.utils.setResult(Types.Status.SUCCESS, 'success', movie));
+    } 
+    catch (error) {
+      return res.send(this.utils.setResult(Types.Status.SUCCESS, error.messages, null));
+    }
+  };
+
+  // ... Update movie detail by movieId
+  async update(req, res) {
+    try {
+      const movie = await Movie.findByIdAndUpdate(
+        req.params.movieId, 
+        req.body,
+        {
+          useFindAndModify:  false,
+          new: true // Update date if we want to see
+        }
+        );
+      return res.send(this.utils.setResult(Types.Status.SUCCESS, 'success', movie));
+    } 
+    catch (error) {
+      return res.send(this.utils.setResult(Types.Status.SUCCESS, error.messages, null));
+    }
+  }
+
+  // ... Create a new movie
   async create(req, res) {
     try {
       const movie = await Movie.create(req.body);
@@ -81,6 +87,7 @@ class MovieController {
     }
   }
 
+  // ... Detele a movie with movieId
   async delete(req, res) {
     try {
       const movie = await Movie.findByIdAndRemove(req.params.movieId);
@@ -91,6 +98,7 @@ class MovieController {
     }
   }
 
+  // ... Get movie between given startYear and endYear
   async between(req, res) {
     try {
       const {startYear, endYear } = req.params;
@@ -104,8 +112,9 @@ class MovieController {
       return res.send(this.utils.setResult(Types.Status.SUCCESS, error.messages, null));
     }
   }
-
-	routes() {
+  
+  // ... Routes
+  routes() {
     this.router.get("/", this.getAll.bind(this));
     this.router.get("/top10", this.getTop10.bind(this));
     this.router.get("/:movieId", this.getById.bind(this));
