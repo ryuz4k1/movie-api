@@ -11,14 +11,15 @@ class MovieController {
         this.utils = new Utils();
     }
 
+    // ... Get all movies in db
     async getAll(req, res, next){
       try {
         const movies = await Movie.aggregate([
           {
             $lookup: {
-              from: 'directors',  //director collectionı ile aggregate
-              localField: 'directorId', //movie directorId ile
-              foreignField: '_id', //director collectionundaki id eşleşsin
+              from: 'directors',  //Aggregate with director collection
+              localField: 'directorId', //Connect movie.directorId
+              foreignField: '_id', //With director._id
               as: 'director'
             }
           },

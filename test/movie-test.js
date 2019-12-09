@@ -26,7 +26,7 @@ describe('/api/movies Tests', () => {
         it('It should GET all movies', (done) => {
             chai.request(app).get('/api/movies').set('x-access-token', token).end((err, res) => {
                 res.should.have.status(200);
-                res.body.should.be.a('array');
+                res.body.should.be.a('object');
                 done();
             });
         });
@@ -49,16 +49,16 @@ describe('/POST movie', () => {
         .send(movie)
         .set('x-access-token', token)
         .end((err, res) => {
+            console.log(res.body);
             res.should.have.status(200);
             res.body.should.be.a('object');
-            res.body.should.have.property('title');
-            res.body.should.have.property('directorId');
-            res.body.should.have.property('category');
-            res.body.should.have.property('country');
-            res.body.should.have.property('year');
-            res.body.should.have.property('imdbScore');
-            movieId = res.body._id;
-            console.log(movieId);
+            res.body.data.should.have.property('title');
+            res.body.data.should.have.property('directorId');
+            res.body.data.should.have.property('category');
+            res.body.data.should.have.property('country');
+            res.body.data.should.have.property('year');
+            res.body.data.should.have.property('imdbScore');
+            movieId = res.body.data._id;
             done();
         });
     });
@@ -73,12 +73,12 @@ describe('/GET/:movieId movie', () => {
         .end((err, res) => {
             res.should.have.status(200);
             res.body.should.be.a('object');
-            res.body.should.have.property('title');
-            res.body.should.have.property('directorId');
-            res.body.should.have.property('category');
-            res.body.should.have.property('country');
-            res.body.should.have.property('year');
-            res.body.should.have.property('imdbScore');
+            res.body.data.should.have.property('title');
+            res.body.data.should.have.property('directorId');
+            res.body.data.should.have.property('category');
+            res.body.data.should.have.property('country');
+            res.body.data.should.have.property('year');
+            res.body.data.should.have.property('imdbScore');
            // res.body.should.have.property('_id').eql(movieId); //id property eşit olmalı test movieId sine
             done();
         });
@@ -103,12 +103,12 @@ describe('/PUT/:movieId movie', () => {
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.a('object');
-                res.body.should.have.property('title').eql(movie.title);
-                res.body.should.have.property('directorId').eql(movie.directorId);
-                res.body.should.have.property('category').eql(movie.category);
-                res.body.should.have.property('country').eql(movie.country);
-                res.body.should.have.property('year').eql(movie.year);
-                res.body.should.have.property('imdbScore').eql(movie.imdbScore);
+                res.body.data.should.have.property('title').eql(movie.title);
+                res.body.data.should.have.property('directorId').eql(movie.directorId);
+                res.body.data.should.have.property('category').eql(movie.category);
+                res.body.data.should.have.property('country').eql(movie.country);
+                res.body.data.should.have.property('year').eql(movie.year);
+                res.body.data.should.have.property('imdbScore').eql(movie.imdbScore);
 
                 done();
             });
