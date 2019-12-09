@@ -1,10 +1,14 @@
 const Movie   = require('../models/movie-model');
+const Utils   = require('../helpers/utils');
+const Types   = require('../helpers/types');
 
 class MovieController {
 
 	constructor(router) {
         this.router = router;
         this.routes();
+
+        this.utils = new Utils();
     }
 
     async getAll(req, res, next){
@@ -22,31 +26,30 @@ class MovieController {
             $unwind: '$director'
           }
         ]);
-        res.send(movies);
-        return next();
+        return res.send(this.utils.setResult(Types.Status.SUCCESS, 'success', movies));
       } 
       catch (error) {
-        console.log(error);
+        return res.send(this.utils.setResult(Types.Status.SUCCESS, error.messages, null));
       }
     };
 
     async getTop10(req, res) {
       try {
         const movies = await Movie.find({}).limit(10).sort({ imdbScore: 1});
-        return res.send(movies);
+        return res.send(this.utils.setResult(Types.Status.SUCCESS, 'success', movies));
       } 
       catch (error) {
-        
+        return res.send(this.utils.setResult(Types.Status.SUCCESS, error.messages, null));
       }
     }
 
     async getById(req, res){
       try {
         const movie = await Movie.findById(req.params.movieId);
-        return res.send(movie);
+        return res.send(this.utils.setResult(Types.Status.SUCCESS, 'success', movie));
       } 
       catch (error) {
-        console.log(error);
+        return res.send(this.utils.setResult(Types.Status.SUCCESS, error.messages, null));
       }
     };
 
@@ -60,30 +63,30 @@ class MovieController {
             new: true //Güncellenmiş datayı döndürmek istiyorsak bunu kullanıyoruz.
           }
           );
-        return res.send(movie);
+        return res.send(this.utils.setResult(Types.Status.SUCCESS, 'success', movie));
       } 
       catch (error) {
-        console.log(error);
+        return res.send(this.utils.setResult(Types.Status.SUCCESS, error.messages, null));
       }
     }
 
-    async create(req, res) {
-      try {
-        const movie = await Movie.create(req.body);
-        return res.send(movie);
-      } 
-      catch (error) {
-        console.log(error);
-      }
+  async create(req, res) {
+    try {
+      const movie = await Movie.create(req.body);
+      return res.send(this.utils.setResult(Types.Status.SUCCESS, 'success', movie));
+    } 
+    catch (error) {
+      return res.send(this.utils.setResult(Types.Status.SUCCESS, error.messages, null));
     }
+  }
 
   async delete(req, res) {
     try {
       const movie = await Movie.findByIdAndRemove(req.params.movieId);
-      return res.send(movie);
+      return res.send(this.utils.setResult(Types.Status.SUCCESS, 'success', movie));
     } 
     catch (error) {
-      console.log(error);
+      return res.send(this.utils.setResult(Types.Status.SUCCESS, error.messages, null));
     }
   }
 
@@ -94,10 +97,10 @@ class MovieController {
       const movies = await Movie.find({
         year: { '$gte': parseInt(startYear), '$lte': parseInt(endYear)  }
       });
-      return res.send(movies);
+      return res.send(this.utils.setResult(Types.Status.SUCCESS, 'success', movies));
     } 
     catch (error) {
-      console.log(error);
+      return res.send(this.utils.setResult(Types.Status.SUCCESS, error.messages, null));
     }
   }
 

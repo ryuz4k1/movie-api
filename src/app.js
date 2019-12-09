@@ -2,7 +2,6 @@
 
 const express                   = require("express");
 const bodyParser                = require("body-parser");
-
 const path                      = require('path');
 
 // db Connection
@@ -73,8 +72,8 @@ class App {
     new DirectorController(router);
     
     // ... Exception middleware
-     const exceptionMiddleware = new ExceptionMiddleware();
-     this.app.use(exceptionMiddleware.errorHandler);
+    const exceptionMiddleware = new ExceptionMiddleware();
+    this.app.use(exceptionMiddleware.errorHandler);
   };
 
   getApp() {
