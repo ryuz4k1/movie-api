@@ -15,6 +15,7 @@ const DirectorController        = require('./controllers/director-controller');
 
 // Middleware
 const verifyToken               = require('./middleware/verify-token');
+const ExceptionMiddleware       = require('../src/middleware/expection-middleware');
 
 //Config
 const config                    = require('../config.json');
@@ -70,6 +71,10 @@ class App {
     router = express.Router();
     this.app.use("/api/directors", router);
     new DirectorController(router);
+    
+    // ... Exception middleware
+     const exceptionMiddleware = new ExceptionMiddleware();
+     this.app.use(exceptionMiddleware.errorHandler);
   };
 
   getApp() {
