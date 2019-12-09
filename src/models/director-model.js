@@ -13,7 +13,7 @@ const DirectorSchema = mongoose.Schema({
 	},
 	bio: {
 		type: String,
-		maxlenght: 1000,
+		maxlenght: 100,
 		minlength: 2
 	},
 	createOn: {

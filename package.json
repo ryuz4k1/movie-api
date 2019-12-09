@@ -9,21 +9,23 @@
   },
   "dependencies": {
     "bcrypt": "^3.0.7",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "^4.17.0",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "jsonwebtoken": "^8.5.1",
+    "mocha": "^6.2.2",
     "mongoose": "^5.7.12",
     "morgan": "~1.9.1",
-    "chai": "^4.2.0",
-    "chai-http": "^4.3.0",
-    "mocha": "^6.2.2"
+    "should": "^13.2.3"
   },
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
-    "mocha": "^6.2.2"
+    "mocha": "^6.2.2",
+    "should": "^13.2.3"
   }
 }

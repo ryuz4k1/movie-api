@@ -49,7 +49,6 @@ describe('/POST movie', () => {
         .send(movie)
         .set('x-access-token', token)
         .end((err, res) => {
-            console.log(res.body);
             res.should.have.status(200);
             res.body.should.be.a('object');
             res.body.data.should.have.property('title');

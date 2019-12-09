@@ -105,6 +105,7 @@ class DirectorController {
 						_id: '$_id._id',
 						name: '$_id.name',
 						surname: '$_id.surname',
+						bio: '$_id.bio',
 						movies: '$movies'
 					}
 				}
