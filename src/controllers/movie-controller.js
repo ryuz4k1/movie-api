@@ -32,7 +32,7 @@ class MovieController {
       return res.send(this.utils.setResult(Types.Status.SUCCESS, 'success', movies));
     } 
     catch (error) {
-      return res.send(this.utils.setResult(Types.Status.SUCCESS, error.messages, null));
+      return res.send(this.utils.setResult(Types.Status.ERROR, error.messages, null));
     }
   };
 
@@ -43,7 +43,7 @@ class MovieController {
       return res.send(this.utils.setResult(Types.Status.SUCCESS, 'success', movies));
     } 
     catch (error) {
-      return res.send(this.utils.setResult(Types.Status.SUCCESS, error.messages, null));
+      return res.send(this.utils.setResult(Types.Status.ERROR, error.messages, null));
     }
   }
 
@@ -54,7 +54,7 @@ class MovieController {
       return res.send(this.utils.setResult(Types.Status.SUCCESS, 'success', movie));
     } 
     catch (error) {
-      return res.send(this.utils.setResult(Types.Status.SUCCESS, error.messages, null));
+      return res.send(this.utils.setResult(Types.Status.ERROR, error.messages, null));
     }
   };
 
@@ -72,7 +72,7 @@ class MovieController {
       return res.send(this.utils.setResult(Types.Status.SUCCESS, 'success', movie));
     } 
     catch (error) {
-      return res.send(this.utils.setResult(Types.Status.SUCCESS, error.messages, null));
+      return res.send(this.utils.setResult(Types.Status.ERROR, error.messages, null));
     }
   }
 
@@ -94,7 +94,7 @@ class MovieController {
       return res.send(this.utils.setResult(Types.Status.SUCCESS, 'success', movie));
     } 
     catch (error) {
-      return res.send(this.utils.setResult(Types.Status.SUCCESS, error.messages, null));
+      return res.send(this.utils.setResult(Types.Status.ERROR, error.messages, null));
     }
   }
 
@@ -109,7 +109,7 @@ class MovieController {
       return res.send(this.utils.setResult(Types.Status.SUCCESS, 'success', movies));
     } 
     catch (error) {
-      return res.send(this.utils.setResult(Types.Status.SUCCESS, error.messages, null));
+      return res.send(this.utils.setResult(Types.Status.ERROR, error.messages, null));
     }
   }
   
