@@ -17,7 +17,7 @@ const verifyToken               = require('./middleware/verify-token');
 const ExceptionMiddleware       = require('../src/middleware/expection-middleware');
 
 //Config
-const config                    = require('../config.json');
+const dotenv                    = require('dotenv').config();
 
 
 
@@ -47,7 +47,7 @@ class App {
     this.app.set('view engine', 'jade');
 
     //config
-    this.app.set('apiKey', config.apiKey.key);
+    this.app.set('apiKey', process.env.key);
 
   }
 
