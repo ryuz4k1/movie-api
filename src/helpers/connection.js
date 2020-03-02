@@ -6,7 +6,7 @@ class Connection {
 
     // ... Mongodb 
     mongoDB() {
-        const mongodb =  mongoose.connect(process.env.endPoint,{useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true });
+        const mongodb =  mongoose.connect(process.env.DB_URL,{useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true });
         mongoose.connection.on('open', () => {
             console.log('Connected');
         });
