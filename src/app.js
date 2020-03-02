@@ -18,6 +18,7 @@ const ExceptionMiddleware       = require('../src/middleware/expection-middlewar
 
 //Config
 const dotenv                    = require('dotenv').config();
+const config                    = require("../config.json");
 
 
 
@@ -47,7 +48,7 @@ class App {
     this.app.set('view engine', 'jade');
 
     //config
-    this.app.set('apiKey', process.env.key);
+    this.app.set('apiKey', config.apiKey.key);
 
   }
 
