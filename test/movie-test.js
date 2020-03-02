@@ -15,7 +15,7 @@ describe('/api/movies Tests', () => {
     //Testler başlamadan önce yapmamız gereken işlemler varsa bunu kullanıyorum.
     before((done) => {
         chai.request(app).post('/authenticate')
-        .send({username: "ryuz4k1", password: "123456"})
+        .send({username: "New", password: "123456"})
         .end((err, res) => {
             token = res.body.token;
             done();
